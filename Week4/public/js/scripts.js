@@ -1,18 +1,3 @@
-const cardList = [
-  {
-    title: "Kitten 2",
-    image: "images/kitten-2.jpg",
-    link: "About Kitten 2",
-    desciption: "Demo description about kitten 2"
-  },
-  {
-    title: "Kitten 3",
-    image: "images/kitten-3.jpg",
-    link: "About Kitten 3",
-    desciption: "Demo description about kitten 3"
-  }
-];
-
 const clickMe = () => {
   alert("Thanks for clicking me. Hope you have a nice day!");
 };
@@ -44,12 +29,20 @@ const addCards = (items) => {
             <span class="card-title grey-text text-darken-4">${item.title}
               <i class="material-icons right">close</i>
             </span>
-            <p class="card-text">${item.desciption}</p>
+            <p class="card-text">${item.description}</p>
           </div>
         </div>
       </div>
     `;
     $("#card-section").append(itemToAppend);
+  });
+};
+
+const getProjects = () => {
+  $.get('/api/projects', (response) => {
+    if (response.statusCode == 200) {
+      addCards(response.data);
+    }
   });
 };
 
@@ -62,5 +55,7 @@ $(document).ready(function () {
   $('#formSubmit').click(() => {
     submitForm();
   });
-  addCards(cardList);
+
+  // 👇 Load cards from MongoDB
+  getProjects();
 });
