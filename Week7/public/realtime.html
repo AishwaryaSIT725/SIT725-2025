@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+  <head><meta charset="utf-8"><title>Realtime Demo</title></head>
+  <body>
+    <h1>Realtime Demo</h1>
+    <div id="status">Connecting…</div>
+    <ul id="msgs"></ul>
+    <form id="f">
+      <input id="msg" placeholder="Type message" required />
+      <button>Send</button>
+    </form>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script>
+      const socket = io();
+      const statusEl = document.getElementById('status');
+      const msgs = document.getElementById('msgs');
+      const form = document.getElementById('f');
+      const msg = document.getElementById('msg');
+
+      socket.on('connect', () => statusEl.textContent = 'Connected ');
+      socket.on('welcome', (d) => add('Server: ' + d.message));
+      socket.on('chat:message', (m) => add('• ' + m));
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        socket.emit('chat:send', msg.value.trim());
+        msg.value = '';
+      });
+
+      function add(txt) {
+        const li = document.createElement('li');
+        li.textContent = txt;
+        msgs.appendChild(li);
+      }
+    </script>
+  </body>
+</html>
